@@ -26,7 +26,7 @@ typedef struct
 int cliente_initArray(sCliente* pArrayClientes, int limite);
 int cliente_alta(sCliente* pArrayClientes, int limite);
 int cliente_modificar(sCliente* pArrayClientes, int limite);
-int cliente_baja(sCliente* pArrayClientes, int limite);
+int cliente_baja(sCliente* pArrayClientes, int limite, int indice);
 int cliente_buscarLibre(sCliente* pArrayClientes, int limite, int* pIndice);
 int cliente_buscarId(sCliente* pArrayClientes, int limite, int idCliente);
 int cliente_imprimir(sCliente* pArrayClientes, int limite);

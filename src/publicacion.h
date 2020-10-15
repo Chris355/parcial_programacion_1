@@ -33,12 +33,12 @@ int publicacion_modificar(sPublicacion* pArray, int limite, int indice);
 int publicacion_baja(sPublicacion* pArray, int limite, int indice);
 int publicacion_buscarLibre(sPublicacion* pArray, int limite, int* pIndice);
 int publicacion_buscarId(sPublicacion* pArray, int limite, int idAviso);
+int publicacion_buscarPorIdCliente(sPublicacion* pArray, int limite, int idCliente);
 int publicacion_imprimir(sPublicacion* pArray, int limite);
 int publicacion_imprimirPorIndice(sPublicacion* pArray, int limite, int indice);
 int publicacion_ordenarPorNombre(sPublicacion* pArray, int limite, int orden);
 int publicacion_altaForzada(sPublicacion* pArray, int limite, int indice, int* idAviso, int idCliente, char* textoAviso, int numeroRubro, int estado);
 int publicacion_estadoPausado(sPublicacion* pArray, int limite);
 int publicacion_estadoActivo(sPublicacion* pArray, int limite);
-
 
 #endif /* PUBLICACION_H_ */

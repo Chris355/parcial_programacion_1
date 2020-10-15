@@ -1,5 +1,5 @@
 //
-// Created by Christian Silvero
+// Created by christian on 12/10/20.
 //
 
 #include "publicacion.h"
@@ -17,7 +17,6 @@ static int generarIdNuevo(void);
  * \brief Cada vez que la llamo me devuelve un ID nuevo que nunca me devolvio antes.
  * \return idPublicacion generado
  */
-
 static int generarIdNuevo(void) {
   static int idPublicacion = 0; //variable global de la funcion
   idPublicacion = idPublicacion+1;
@@ -140,7 +139,7 @@ int publicacion_buscarLibre(sPublicacion* pArray, int limite, int* pIndice)
 
 //----------------------- publicacion_buscarId -----------------------------------------------
 /**
- * \brief Busca el idPublicacion solicitado
+ * \brief Busca pucblicacion por el idPublicacion indicado
  * \param sPublicacion* pArray, Es el puntero al array de publicaciones
  * \param int limite, es el limite de array
  * \param int* pIndex, puntero del indice buscado
@@ -157,6 +156,35 @@ int publicacion_buscarId(sPublicacion* pArray, int limite, int idPublicacion)
       if(pArray[i].isEmpty == FALSE )
       {
         if(pArray[i].idPublicacion == idPublicacion)
+        {
+          retorno = i;
+          break;
+        }
+      }
+    }
+  }
+  return retorno;
+}
+
+//----------------------- publicacion_buscarPorIdCliente -----------------------------------------------
+/**
+ * \brief Busca pucblicacion por el idCliente indicado
+ * \param sPublicacion* pArray, Es el puntero al array de publicaciones
+ * \param int limite, es el limite de array
+ * \param int* pIndex, puntero del indice buscado
+ * \return (-1) Error / (i) Ok, indice del id buscado
+ *
+*/
+int publicacion_buscarPorIdCliente(sPublicacion* pArray, int limite, int idCliente)
+{
+  int retorno = -1;
+  if (pArray != NULL && limite > 0)
+  {
+    for (int i = 0; i < limite; i++)
+    {
+      if(pArray[i].isEmpty == FALSE )
+      {
+        if(pArray[i].idCliente == idCliente)
         {
           retorno = i;
           break;
@@ -203,6 +231,7 @@ int publicacion_modificar(sPublicacion* pArray, int limite, int indice)
 int publicacion_baja(sPublicacion* pArray, int limite, int indice)
 {
   int retorno = -1;
+
   if(pArray != NULL && limite > 0 && indice >= 0)
   {
     pArray[indice].isEmpty = TRUE;
@@ -227,7 +256,7 @@ int publicacion_estadoPausado(sPublicacion* pArray, int limite)
   int bufferRespuesta;
   if(pArray != NULL && limite > 0)
   {
-    if( utn_getInt(&bufferId, "Indique Id del publicacion a pausar : \n", "Error!", 0, 1000, RETRY)==0 &&
+    if( utn_getInt(&bufferId, "Indique Id de la publicacion a pausar : \n", "Error!", 0, 1000, RETRY)==0 &&
         publicacion_buscarId(pArray, limite, bufferId) != -1 )
     {
       indice = publicacion_buscarId(pArray, limite, bufferId);
@@ -258,7 +287,7 @@ int publicacion_estadoActivo(sPublicacion* pArray, int limite)
   int bufferRespuesta;
   if(pArray != NULL && limite > 0)
   {
-    if( utn_getInt(&bufferId, "Indique Id del publicacion a activar : \n", "Error!", 0, 1000, RETRY)==0 &&
+    if( utn_getInt(&bufferId, "Indique Id de la publicacion a activar : \n", "Error!", 0, 1000, RETRY)==0 &&
         publicacion_buscarId(pArray, limite, bufferId) != -1 )
     {
       indice = publicacion_buscarId(pArray, limite, bufferId);

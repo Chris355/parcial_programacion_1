@@ -22,8 +22,8 @@ int main(void)
   int auxIdCliente;
   int auxIdPublicacion;
   int arrayIdsClientes[QTY_CLIENTES];
-  int idCliente=1;
-  int idPublicaciones=1;
+  int idCliente=10;
+  int idPublicaciones=10;
   sCliente arrayClientes[QTY_CLIENTES];
   sPublicacion arrayPublicaciones[QTY_PUBLICACIONES];
   char mensajeErrorMenu[SIZE_STRING] = "Error! opcion invalida.\n";
@@ -59,17 +59,16 @@ int main(void)
   cliente_altaForzadaArray(arrayClientes, QTY_CLIENTES, 2, &idCliente, "Bart", "Mitre", "20-11000011-1");
   cliente_altaForzadaArray(arrayClientes, QTY_CLIENTES, 3, &idCliente, "Chris", "Silvero", "20-31000031-1");
 
-
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 0, &idPublicaciones, 2, "Publicacion del rubro 1", 1, FALSE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 1, &idPublicaciones, 2, "Publicacion del rubro 10", 10, TRUE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 2, &idPublicaciones, 3, "Publicacion del rubro 2", 2, TRUE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 3, &idPublicaciones, 1, "Publicacion del rubro 5", 5, TRUE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 4, &idPublicaciones, 3, "Publicacion del rubro 10", 10, FALSE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 5, &idPublicaciones, 1, "Publicacion del rubro 15", 15, TRUE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 6, &idPublicaciones, 3, "Publicacion del rubro 2", 2, TRUE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 7, &idPublicaciones, 2, "Publicacion del rubro 1", 1, FALSE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 6, &idPublicaciones, 4, "Publicacion del rubro 2", 2, TRUE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 7, &idPublicaciones, 4, "Publicacion del rubro 1", 1, FALSE);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 0, &idPublicaciones, 12, "Publicacion del rubro 1", 1, FALSE);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 1, &idPublicaciones, 12, "Publicacion del rubro 10", 10, TRUE);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 2, &idPublicaciones, 13, "Publicacion del rubro 2", 2, TRUE);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 3, &idPublicaciones, 11, "Publicacion del rubro 5", 5, TRUE);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 4, &idPublicaciones, 13, "Publicacion del rubro 10", 10, FALSE);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 5, &idPublicaciones, 11, "Publicacion del rubro 15", 15, TRUE);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 6, &idPublicaciones, 13, "Publicacion del rubro 2", 2, TRUE);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 7, &idPublicaciones, 12, "Publicacion del rubro 1", 1, FALSE);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 6, &idPublicaciones, 10, "Publicacion del rubro 2", 2, TRUE);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 7, &idPublicaciones, 10, "Publicacion del rubro 1", 1, FALSE);
 
 
   do
@@ -80,7 +79,7 @@ int main(void)
       {
         case 1: //ALTA CLIENTE
           auxIdCliente = cliente_alta(arrayClientes, QTY_CLIENTES);
-          if(auxIdCliente != 0)
+          if(auxIdCliente != -1)
           {
             cliente_imprimirPorId(arrayClientes, QTY_CLIENTES, auxIdCliente);
             printf("**Ingreso correcto**\n");
@@ -94,7 +93,8 @@ int main(void)
           printf("\n=============== Listado de Clientes ===================\n");
           cliente_imprimir(arrayClientes, QTY_CLIENTES);
           printf("\n=======================================================\n");
-          if(cliente_modificar(arrayClientes, QTY_CLIENTES)==0)
+          auxIdCliente = cliente_modificar(arrayClientes, QTY_CLIENTES);
+          if(auxIdCliente != -1)
           {
             cliente_imprimirPorId(arrayClientes, QTY_CLIENTES, auxIdCliente);
             printf("**Modificación correcta**\n");
@@ -105,29 +105,7 @@ int main(void)
           }
         break;
         case 3:	//BAJA CLIENTE
-          printf("\n=============== Listado de Clientes ===================\n");
-          cliente_imprimir(arrayClientes, QTY_CLIENTES);
-          printf("\n=======================================================\n");
-          if(utn_getInt(&auxIdCliente, "Id del cliente a listar publicaciones? ", "Error! ", 0, 1000, RETRY)==0)
-          {
-            cliente_buscarId(arrayClientes, QTY_CLIENTES, auxIdCliente);
-            printf("**Ingreso correcto de ID**\n");
-            printf("\n========== Listado de publicaciones del Cliente ==============\n");
-            informe_imprimirPublicacionesPorIdCliente(arrayPublicaciones, QTY_PUBLICACIONES, arrayClientes, QTY_CLIENTES, auxIdCliente);
-            printf("\n=======================================================\n");
-            if(cliente_baja(arrayClientes, QTY_CLIENTES) == 0)
-            {
-              printf("**Baja correcta**\n");
-            }
-            else
-            {
-              printf("**La baja no se ha realizado**\n");
-            }
-          }
-          else
-          {
-            printf("**Error en ingreso de Id**\n");
-          }
+          informe_bajaClientePublicacion(arrayPublicaciones,QTY_PUBLICACIONES,arrayClientes,QTY_CLIENTES);
         break;
         case 4: //PUBLICAR
           printf("\n=============== Listado de Clientes ===================\n");
@@ -158,20 +136,20 @@ int main(void)
           printf("\n=============== Listado de Publicaciones =====================\n");
           publicacion_imprimir(arrayPublicaciones, QTY_PUBLICACIONES);
           printf("\n=======================================================\n");
-          if(utn_getInt(&auxIdPublicacion, "Id de la pupblicacion a listar: ", "Error! ", 1, 1000, RETRY) == 0)
+          if(utn_getInt(&auxIdPublicacion, "Indique id de la publicacion: ", "Error! ", 1, 1000, RETRY) == 0)
           {
             printf("**Ingreso correcto de id**\n");
-            printf("\n========== Informacion de la pupblicacion del Cliente ==============\n");
+            printf("\n========== Informacion del Cliente de la publicacion ==============\n");
             informe_imprimirPublicacionPorSuId(arrayPublicaciones, QTY_PUBLICACIONES, arrayClientes, QTY_CLIENTES, auxIdPublicacion);
             printf("\n===========================================================\n");
 
             if(publicacion_estadoPausado(arrayPublicaciones, QTY_PUBLICACIONES) == 0)
             {
-              printf("**Publicacion pausado correctamente**\n");
+              printf("**Publicacion pausada correctamente**\n");
             }
             else
             {
-              printf("**Publicacion no modificado**\n");
+              printf("**Publicacion no modificada**\n");
             }
           }
           else
@@ -183,16 +161,16 @@ int main(void)
           printf("\n=============== Listado de Publicaciones =====================\n");
           publicacion_imprimir(arrayPublicaciones, QTY_PUBLICACIONES);
           printf("\n=======================================================\n");
-          if(utn_getInt(&auxIdPublicacion, "Id de la pupblicacion a listar: ", "Error! ", 1, 1000, RETRY) == 0)
+          if(utn_getInt(&auxIdPublicacion, "Indique id de la publicacion: ", "Error! ", 1, 1000, RETRY) == 0)
           {
             printf("**Ingreso correcto de id**\n");
-            printf("\n========== Informacion de la pupblicacion del Cliente ==============\n");
+            printf("\n========== Informacion del Cliente de la publicacion ==============\n");
             informe_imprimirPublicacionPorSuId(arrayPublicaciones, QTY_PUBLICACIONES, arrayClientes, QTY_CLIENTES, auxIdPublicacion);
             printf("\n===========================================================\n");
 
             if(publicacion_estadoActivo(arrayPublicaciones, QTY_PUBLICACIONES) == 0)
             {
-              printf("**Publicacion activo correctamente**\n");
+              printf("**Publicacion activada correctamente**\n");
             }
             else
             {
@@ -205,23 +183,23 @@ int main(void)
           }
           break;
         case 7: //IMPRIMIR CLIENTES
-          informe_imprimirPublicacionesPorCliente(arrayIdsClientes, arrayPublicaciones, QTY_PUBLICACIONES,arrayClientes, QTY_CLIENTES);
+          informe_imprimirPublicacionesPorCliente(arrayIdsClientes, arrayPublicaciones, QTY_PUBLICACIONES, arrayClientes, QTY_CLIENTES);
           break;
         case 8: //INFORMAR
           if(utn_getInt(&opcion, mensajeSubMenu, mensajeErrorMenu, MIN_MENU, MAX_SUBMENU, RETRY)==0)
           {
             switch(opcion)
             {
-              case 1: //Cliente con más publicaciones.
+              case 1:
                 break;
-              case 2: //Cantidad de publicaciones pausados.
+              case 2:
                 break;
-              case 3: //Rubro con mas publicaciones.
+              case 3:
                 break;
             }
           }
           break;
-        case 9:
+        case 9: //
           break;
       }
     }

@@ -1,5 +1,5 @@
 //
-// Created by Christian Silvero
+// Created by christian on 12/10/20.
 //
 
 #include "cliente.h"
@@ -149,13 +149,11 @@ int cliente_buscarId(sCliente* pArrayClientes, int limite, int idCliente)
   {
     for (int i = 0; i < limite; i++)
     {
-      if(pArrayClientes[i].isEmpty == FALSE )
+      if(pArrayClientes[i].isEmpty == FALSE &&
+         pArrayClientes[i].idCliente == idCliente)
       {
-        if(pArrayClientes[i].idCliente == idCliente)
-        {
-          retorno = i;
-          break;
-        }
+        retorno = i;
+        break;
       }
     }
   }
@@ -195,43 +193,36 @@ int cliente_modificar(sCliente* pArrayClientes, int limite)
             if(utn_getCuit(bufferEntidad.cuit, "Indique cuit a modificar: ", "Error! dato invalido.\n", RETRY, SIZE_CUIT)==0)
             {
               strncpy(pArrayClientes[indice].cuit, bufferEntidad.cuit, SIZE_STRING);
+              retorno = bufferId;
             }
           }
         }
       }
+      else
+      {
+        printf("No se encontró Id!\n");
+      }
     }
-    retorno = bufferId;
   }
   return retorno;
 }
 
 //----------------------- cliente_baja --------------------------------------------------
 /**
- * \brief Da de Baja el cliente con sus publicaciones
+ * \brief Baja
  * \param sCliente* pArrayClientes, Es el puntero al array de clientes
  * \param int limite, es el limite de array
  * \return (-1) Error / (0) Ok
  *
 */
-int cliente_baja(sCliente* pArrayClientes, int limite)
+int cliente_baja(sCliente* pArrayClientes, int limite, int indice)
 {
   int retorno = -1;
-  int indice;
-  int bufferId;
-  int bufferRespuesta;
-  if(pArrayClientes != NULL && limite>0)
+
+  if(pArrayClientes != NULL && limite > 0  && indice >= 0)
   {
-    if( utn_getInt(&bufferId, "Indique Id del cliente para dar de baja: \n", "Error!", 0, 1000, RETRY)==0 &&
-        cliente_buscarId(pArrayClientes, limite, bufferId)!=-1 )
-    {
-      indice = cliente_buscarId(pArrayClientes, limite, bufferId);
-      if (utn_getInt(&bufferRespuesta, "Confirma baja?. Indique 1 (si) o 0 (no): ", "Error! ", FALSE, TRUE, RETRY) == 0 &&
-          bufferRespuesta == TRUE)
-      {
-        pArrayClientes[indice].isEmpty = TRUE;
-        retorno = 0;
-      }
-    }
+    pArrayClientes[indice].isEmpty = TRUE;
+    retorno = 0;
   }
   return retorno;
 }
