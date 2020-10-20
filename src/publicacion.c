@@ -65,7 +65,7 @@ int publicacion_alta(sPublicacion* pArray, int limite, int idCliente)
      limite > 0 &&
      idCliente >= 0)
   {
-    indice = publicacion_buscarId(pArray, limite, idCliente);
+    indice = publicacion_buscarPorId(pArray, limite, idCliente);
     if(utn_getDescripcion(bufferPublicacion.textoPublicacion, "Texto Publicacion? ", "Error! ", RETRY, SIZE_PUBLICACION) == 0 &&
          utn_getInt(&bufferPublicacion.numeroRubro, "Numero Rubro? ", "Error! ", MIN_RUBRO, MAX_RUBRO, RETRY) == 0)
     {
@@ -146,7 +146,7 @@ int publicacion_buscarLibre(sPublicacion* pArray, int limite, int* pIndice)
  * \return (-1) Error / (i) Ok, indice del id buscado
  *
 */
-int publicacion_buscarId(sPublicacion* pArray, int limite, int idPublicacion)
+int publicacion_buscarPorId(sPublicacion* pArray, int limite, int idPublicacion)
 {
   int retorno = -1;
   if (pArray != NULL && limite > 0)
@@ -248,26 +248,23 @@ int publicacion_baja(sPublicacion* pArray, int limite, int indice)
  * \return (-1) Error / (0) Ok
  *
 */
-int publicacion_estadoPausado(sPublicacion* pArray, int limite)
+int publicacion_estadoPausado(sPublicacion* pArray, int limite, int getId)
 {
   int retorno = -1;
-  int bufferId;
   int indice;
   int bufferRespuesta;
-  if(pArray != NULL && limite > 0)
+
+  if(pArray != NULL && limite > 0 && getId > 0)
   {
-    if( utn_getInt(&bufferId, "Indique Id de la publicacion a pausar : \n", "Error!", 0, 1000, RETRY)==0 &&
-        publicacion_buscarId(pArray, limite, bufferId) != -1 )
-    {
-      indice = publicacion_buscarId(pArray, limite, bufferId);
-      if (utn_getInt(&bufferRespuesta, "Confirma pausar el publicacion?. Indique 1 (si) o 0 (no): ", "Error! ", FALSE, TRUE, RETRY) == 0 &&
-          bufferRespuesta == TRUE)
-      {
-        pArray[indice].estado = TRUE;
-        retorno = 0;
-      }
-    }
+		indice = publicacion_buscarPorId(pArray, limite, getId);
+		if (utn_getInt(&bufferRespuesta, "Confirma pausar la publicacion?. Indique 1 (si) o 0 (no): ", "Error! ", FALSE, TRUE, RETRY) == 0 &&
+				bufferRespuesta == TRUE)
+		{
+			pArray[indice].estado = FALSE;
+			retorno = 0;
+		}
   }
+
   return retorno;
 }
 
@@ -279,25 +276,21 @@ int publicacion_estadoPausado(sPublicacion* pArray, int limite)
  * \return (-1) Error / (0) Ok
  *
 */
-int publicacion_estadoActivo(sPublicacion* pArray, int limite)
+int publicacion_estadoActivo(sPublicacion* pArray, int limite, int getId)
 {
   int retorno = -1;
-  int bufferId;
   int indice;
   int bufferRespuesta;
-  if(pArray != NULL && limite > 0)
+
+  if(pArray != NULL && limite > 0 && getId > 0)
   {
-    if( utn_getInt(&bufferId, "Indique Id de la publicacion a activar : \n", "Error!", 0, 1000, RETRY)==0 &&
-        publicacion_buscarId(pArray, limite, bufferId) != -1 )
-    {
-      indice = publicacion_buscarId(pArray, limite, bufferId);
-      if (utn_getInt(&bufferRespuesta, "Confirma activar el publicacion?. Indique 1 (si) o 0 (no): ", "Error! ", FALSE, TRUE, RETRY) == 0 &&
-          bufferRespuesta == TRUE)
-      {
-        pArray[indice].estado = FALSE;
-        retorno = 0;
-      }
-    }
+  	indice = publicacion_buscarPorId(pArray, limite, getId);
+		if (utn_getInt(&bufferRespuesta, "Confirma activar la publicacion?. Indique 1 (si) o 0 (no): ", "Error! ", FALSE, TRUE, RETRY) == 0 &&
+				bufferRespuesta == TRUE)
+		{
+			pArray[indice].estado = TRUE;
+			retorno = 0;
+		}
   }
   return retorno;
 }

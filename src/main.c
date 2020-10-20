@@ -7,25 +7,29 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "utn.h"
 #include "cliente.h"
 #include "publicacion.h"
-#include "utn.h"
 #include "informe.h"
 
 #define MIN_MENU 1
-#define MAX_MENU 10
-#define MAX_SUBMENU 4
+#define MAX_MENU 9
+#define MAX_SUBMENU 11
 
 int main(void)
 {
   int opcion;
   int auxIdCliente;
-  int auxIdPublicacion;
-  int arrayIdsClientes[QTY_CLIENTES];
+  int auxIndice;
+  int auxRubro;
+  char auxCuit[SIZE_CUIT];
+  int contador;
   int idCliente=10;
   int idPublicaciones=10;
   sCliente arrayClientes[QTY_CLIENTES];
   sPublicacion arrayPublicaciones[QTY_PUBLICACIONES];
+  sRubro arrayRubros[QTY_RUBROS];
+
   char mensajeErrorMenu[SIZE_STRING] = "Error! opcion invalida.\n";
   char mensajeMenu[SIZE_STRING] = "\n"
                                   "\n===== Menú de Opciones ===== "
@@ -37,16 +41,22 @@ int main(void)
                                   "\n 6 - Reaunudar publicacion "
                                   "\n 7 - Imprimir clientes "
                                   "\n 8 - Informar "
-                                  "\n 9 -  "
-                                  "\n10 - Salir"
+                                  "\n 9 - Salir"
                                   "\n============================ "
                                   "\n";
   char mensajeSubMenu[SIZE_STRING] = "\n"
-                                  "\n===== Informar ===== "
-                                  "\n1 - Cliente con más publicaciones "
-                                  "\n2 - Cantidad de publicaciones pausados "
-                                  "\n3 - Rubro con mas publicaciones "
-                                  "\n4 - Salir"
+                                  "\n===== Informar ============= "
+                                  "\n 1 - Cliente con más publicaciones "
+                                  "\n 2 - Cantidad de publicaciones pausados "
+                                  "\n 3 - Rubro con mas publicaciones "
+      														"\n 4 - Cliente con más avisos activos "
+      														"\n 5 - Cliente con más avisos pausados "
+																	"\n 6 - Lista de rubros ordenados de menor a mayor"
+																	"\n 7 - Cantidad de avisos activos totales "
+																	"\n 8 - Cliente con menos avisos "
+																	"\n 9 - Cantidad por rubro "
+																	"\n10 - Cantidad por cliente "
+                                  "\n11 - Salir"
                                   "\n============================ "
                                   "\n";
 
@@ -57,19 +67,18 @@ int main(void)
   cliente_altaForzadaArray(arrayClientes, QTY_CLIENTES, 0, &idCliente, "Andres", "Florida", "20-22000022-2");
   cliente_altaForzadaArray(arrayClientes, QTY_CLIENTES, 1, &idCliente, "Maria", "Perez", "27-33000033-3");
   cliente_altaForzadaArray(arrayClientes, QTY_CLIENTES, 2, &idCliente, "Bart", "Mitre", "20-11000011-1");
-  cliente_altaForzadaArray(arrayClientes, QTY_CLIENTES, 3, &idCliente, "Chris", "Silvero", "20-31000031-1");
+  cliente_altaForzadaArray(arrayClientes, QTY_CLIENTES, 3, &idCliente, "Chris", "Silvero", "1234");
 
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 0, &idPublicaciones, 12, "Publicacion del rubro 1", 1, FALSE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 1, &idPublicaciones, 12, "Publicacion del rubro 10", 10, TRUE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 2, &idPublicaciones, 13, "Publicacion del rubro 2", 2, TRUE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 3, &idPublicaciones, 11, "Publicacion del rubro 5", 5, TRUE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 4, &idPublicaciones, 13, "Publicacion del rubro 10", 10, FALSE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 5, &idPublicaciones, 11, "Publicacion del rubro 15", 15, TRUE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 6, &idPublicaciones, 13, "Publicacion del rubro 2", 2, TRUE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 7, &idPublicaciones, 12, "Publicacion del rubro 1", 1, FALSE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 6, &idPublicaciones, 10, "Publicacion del rubro 2", 2, TRUE);
-  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 7, &idPublicaciones, 10, "Publicacion del rubro 1", 1, FALSE);
-
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 0, &idPublicaciones, 10, "Publicacion del rubro 1", 1, PAUSADO);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 1, &idPublicaciones, 12, "Publicacion del rubro 10", 10, ACTIVO);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 2, &idPublicaciones, 13, "Publicacion del rubro 2", 2, ACTIVO);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 3, &idPublicaciones, 11, "Publicacion del rubro 5", 5, ACTIVO);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 4, &idPublicaciones, 10, "Publicacion del rubro 10", 10, PAUSADO);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 5, &idPublicaciones, 11, "Publicacion del rubro 15", 15, ACTIVO);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 6, &idPublicaciones, 13, "Publicacion del rubro 2", 2, ACTIVO);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 7, &idPublicaciones, 10, "Publicacion del rubro 1", 1, PAUSADO);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 8, &idPublicaciones, 10, "Publicacion del rubro 2", 2, ACTIVO);
+  publicacion_altaForzada(arrayPublicaciones, QTY_PUBLICACIONES, 9, &idPublicaciones, 13, "Publicacion del rubro 1", 1, PAUSADO);
 
   do
   {
@@ -112,7 +121,7 @@ int main(void)
           cliente_imprimir(arrayClientes, QTY_CLIENTES);
           printf("\n=======================================================\n");
           if(utn_getInt(&auxIdCliente, "Id cliente? ", "Error! ", 0, 100, RETRY) == 0 &&
-             cliente_buscarId(arrayClientes, QTY_CLIENTES, auxIdCliente) != -1)
+             cliente_buscarPorId(arrayClientes, QTY_CLIENTES, auxIdCliente) != -1)
           {
             printf("\n**Id valido**\n");
             if(publicacion_alta(arrayPublicaciones, QTY_PUBLICACIONES, auxIdCliente) == 0)
@@ -133,77 +142,98 @@ int main(void)
           }
           break;
         case 5: //PAUSAR PUBLICACION
-          printf("\n=============== Listado de Publicaciones =====================\n");
-          publicacion_imprimir(arrayPublicaciones, QTY_PUBLICACIONES);
-          printf("\n=======================================================\n");
-          if(utn_getInt(&auxIdPublicacion, "Indique id de la publicacion: ", "Error! ", 1, 1000, RETRY) == 0)
-          {
-            printf("**Ingreso correcto de id**\n");
-            printf("\n========== Informacion del Cliente de la publicacion ==============\n");
-            informe_imprimirPublicacionPorSuId(arrayPublicaciones, QTY_PUBLICACIONES, arrayClientes, QTY_CLIENTES, auxIdPublicacion);
-            printf("\n===========================================================\n");
-
-            if(publicacion_estadoPausado(arrayPublicaciones, QTY_PUBLICACIONES) == 0)
-            {
-              printf("**Publicacion pausada correctamente**\n");
-            }
-            else
-            {
-              printf("**Publicacion no modificada**\n");
-            }
-          }
-          else
-          {
-            printf("**Error en ingreso de id**\n");
-          }
+        	informe_pausarPublicacion(arrayPublicaciones, QTY_PUBLICACIONES, arrayClientes, QTY_CLIENTES);
           break;
         case 6: //REANUDAR PUBLICACION
-          printf("\n=============== Listado de Publicaciones =====================\n");
-          publicacion_imprimir(arrayPublicaciones, QTY_PUBLICACIONES);
-          printf("\n=======================================================\n");
-          if(utn_getInt(&auxIdPublicacion, "Indique id de la publicacion: ", "Error! ", 1, 1000, RETRY) == 0)
-          {
-            printf("**Ingreso correcto de id**\n");
-            printf("\n========== Informacion del Cliente de la publicacion ==============\n");
-            informe_imprimirPublicacionPorSuId(arrayPublicaciones, QTY_PUBLICACIONES, arrayClientes, QTY_CLIENTES, auxIdPublicacion);
-            printf("\n===========================================================\n");
-
-            if(publicacion_estadoActivo(arrayPublicaciones, QTY_PUBLICACIONES) == 0)
-            {
-              printf("**Publicacion activada correctamente**\n");
-            }
-            else
-            {
-              printf("**Publicacion no modificado**\n");
-            }
-          }
-          else
-          {
-            printf("**Error en ingreso de id**\n");
-          }
+        	informe_reanudarPublicacion(arrayPublicaciones, QTY_PUBLICACIONES, arrayClientes, QTY_CLIENTES);
           break;
         case 7: //IMPRIMIR CLIENTES
-          informe_imprimirPublicacionesPorCliente(arrayIdsClientes, arrayPublicaciones, QTY_PUBLICACIONES, arrayClientes, QTY_CLIENTES);
+          informe_imprimirClientesConTotalAvisosActivos(arrayPublicaciones, QTY_PUBLICACIONES, arrayClientes, QTY_CLIENTES);
           break;
         case 8: //INFORMAR
           if(utn_getInt(&opcion, mensajeSubMenu, mensajeErrorMenu, MIN_MENU, MAX_SUBMENU, RETRY)==0)
           {
             switch(opcion)
             {
-              case 1:
+              case 1: //Cliente con más publicaciones
+              	if(informe_clientesConMasAvisos(arrayPublicaciones, QTY_PUBLICACIONES, arrayClientes, QTY_CLIENTES, &auxIndice, &contador)==0)
+              	{
+              		printf("\nEl cliente con mas publicaciones es %s %s - Total: %d\n",
+              				arrayClientes[auxIndice].nombre, arrayClientes[auxIndice].apellido, contador);
+              	}
                 break;
-              case 2:
+              case 2: //Cantidad de publicaciones pausados
+              	publicacion_imprimir(arrayPublicaciones, QTY_PUBLICACIONES);
+              	if(informe_cantidadDeAvisosPausados(arrayPublicaciones, QTY_PUBLICACIONES, &contador)==0)
+              	{
+              		printf("\nLa cantidad de avisos pausados es: %d\n", contador);
+              	}
                 break;
-              case 3:
+              case 3: //Rubro con mas publicaciones
+              	if(informe_rubroConMasAvisos(arrayRubros, QTY_RUBROS, arrayPublicaciones, QTY_PUBLICACIONES, &auxRubro, &contador)==0)
+              	{
+              		printf("\nEl rubro con mas publicaciones es el %d - Total: %d\n", auxRubro, contador);
+              	}
+                break;
+              case 4: //Cliente con más avisos activos
+              	if(informe_clienteConMasAvisosActivos(arrayPublicaciones, QTY_PUBLICACIONES, arrayClientes, QTY_CLIENTES, &auxIndice, &contador)==0)
+              	{
+              		printf("\nEl cliente con mas publicaciones activas es %s %s - Total: %d\n",
+              				arrayClientes[auxIndice].nombre, arrayClientes[auxIndice].apellido, contador);
+              	}
+                break;
+              case 5: //Cliente con más avisos pausados
+              	if(informe_clienteConMasAvisosPausados(arrayPublicaciones, QTY_PUBLICACIONES, arrayClientes, QTY_CLIENTES, &auxIndice, &contador)==0)
+              	{
+              		printf("\nEl cliente con mas publicaciones pausadas es %s %s - Total: %d\n",
+              				arrayClientes[auxIndice].nombre, arrayClientes[auxIndice].apellido, contador);
+              	}
+                break;
+              case 6: //Imprimir lista de rubros ordenados
+              	if(informe_ordenarRubroMenorAMayor(arrayRubros, QTY_RUBROS, arrayPublicaciones)==0)
+              	{
+              		informe_imprimirRubros(arrayRubros, QTY_RUBROS);
+              	}
+                break;
+              case 7: //Cantidad de avisos activos totales
+              	if(informe_cantidadAvisosActivosTotales(arrayPublicaciones, QTY_PUBLICACIONES, &contador)==0)
+              	{
+              		printf("\nLa cantidad de avisos activos totales es: %d\n", contador);
+              	}
+                break;
+              case 8: //Cliente con menos avisos
+              	if(informe_clienteConMenosAvisos(arrayPublicaciones, QTY_PUBLICACIONES, arrayClientes, QTY_CLIENTES, &auxIndice, &contador)==0)
+              	{
+              		printf("\nEl cliente con menos avisos es %s %s - Total: %d\n",
+              				arrayClientes[auxIndice].nombre, arrayClientes[auxIndice].apellido, contador);
+              	}
+                break;
+              case 9: //Cantidad por rubro: Ingresar por consola un numero de rubro e imprimir la cantidad de avisos que existen de dicho rubro.
+              	if(utn_getInt(&auxRubro, "Indique rubro del 1/50: ", "Error!", 1, 50, RETRY)==0)
+              	{
+              		if(informe_contadorAvisosPorRubro(arrayPublicaciones, QTY_PUBLICACIONES, auxRubro, &contador)==0)
+              		{
+              			printf("\nLa cantidad de avisos del RUBRO %d es: %d\n", auxRubro, contador);
+              			informe_imprimirAvisosPorRubro(arrayPublicaciones, QTY_PUBLICACIONES, auxRubro);
+              		}
+              	}
+                break;
+              case 10: //Cantidad por cliente: Ingresar por consola un cuit e imprimir la cantidad de avisos que existen de dicho cliente.
+              	if(utn_getCuit(auxCuit, "Cuit? ", "Error", RETRY, SIZE_CUIT) == 0)
+              	{
+              		if(informe_contadorAvisosPorCuit(arrayPublicaciones, QTY_PUBLICACIONES, arrayClientes, QTY_CLIENTES, auxCuit, &contador)==0)
+              		{
+              			printf("\nLa cantidad de avisos del CLIENTE %s es: %d\n", auxCuit, contador);
+              			informe_imprimirAvisosPorCuit(arrayPublicaciones, QTY_PUBLICACIONES, arrayClientes, QTY_CLIENTES, auxCuit);
+              		}
+              	}
                 break;
             }
           }
           break;
-        case 9: //
-          break;
       }
     }
-  }while(opcion != 10);
+  }while(opcion != 9);
 
   return EXIT_SUCCESS;
 }

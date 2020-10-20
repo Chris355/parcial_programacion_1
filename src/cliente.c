@@ -62,12 +62,12 @@ int cliente_alta(sCliente* pArrayClientes, int limite)
   int indice;
   sCliente buffersCliente;
   if(	pArrayClientes != NULL &&
-       limite > 0 &&
-       cliente_buscarLibre(pArrayClientes, limite, &indice) == 0 )
+      limite > 0 &&
+      cliente_buscarLibre(pArrayClientes, limite, &indice) == 0 )
   {
     if(	utn_getNombre(buffersCliente.nombre, "Nombre? ", "Error", RETRY, SIZE_STRING) == 0 &&
-         utn_getNombre(buffersCliente.apellido, "Apellido? ", "Error", RETRY, SIZE_STRING) == 0 &&
-         utn_getCuit(buffersCliente.cuit, "Cuit? ", "Error", RETRY, SIZE_CUIT) == 0 )
+        utn_getNombre(buffersCliente.apellido, "Apellido? ", "Error", RETRY, SIZE_STRING) == 0 &&
+        utn_getCuit(buffersCliente.cuit, "Cuit? ", "Error", RETRY, SIZE_CUIT) == 0 )
     {
       buffersCliente.idCliente = generarIdNuevo();
       pArrayClientes[indice] = buffersCliente;
@@ -134,7 +134,7 @@ int cliente_buscarLibre(sCliente* pArrayClientes, int limite, int* pIndice)
   return retorno;
 }
 
-//----------------------- cliente_buscarId ----------------------------------------------
+//----------------------- cliente_buscarPorId ----------------------------------------------
 /**
  * \brief Busca el idCliente solicitado
  * \param sCliente* pArrayClientes, Es el puntero al array de clientes
@@ -142,15 +142,44 @@ int cliente_buscarLibre(sCliente* pArrayClientes, int limite, int* pIndice)
  * \return (-1) Error / (i) Ok, indice buscado
  *
 */
-int cliente_buscarId(sCliente* pArrayClientes, int limite, int idCliente)
+int cliente_buscarPorId(sCliente* pArrayClientes, int limite, int idCliente)
 {
   int retorno = -1;
+  int i;
   if (pArrayClientes != NULL && limite > 0)
   {
-    for (int i = 0; i < limite; i++)
+    for(i=0; i<limite; i++)
     {
       if(pArrayClientes[i].isEmpty == FALSE &&
          pArrayClientes[i].idCliente == idCliente)
+      {
+        retorno = i;
+        break;
+      }
+    }
+  }
+  return retorno;
+}
+
+//----------------------- cliente_buscarPorCuit ----------------------------------------------
+/**
+ * \brief Busca el cuit solicitado y devuelve id CLiente
+ * \param sCliente* pArrayClientes, Es el puntero al array de clientes
+ * \param int limite, es el limite de array
+ * \return (-1) Error / (idCliente) Ok
+ *
+*/
+int cliente_buscarPorCuit(sCliente* pArrayClientes, int limite, char* auxCuit)
+{
+  int retorno = -1;
+  int i;
+
+  if (pArrayClientes != NULL && limite > 0)
+  {
+    for(i=0; i<limite; i++)
+    {
+      if(pArrayClientes[i].isEmpty == FALSE &&
+         strncmp(pArrayClientes[i].cuit, auxCuit, SIZE_CUIT)==0)
       {
         retorno = i;
         break;
@@ -180,9 +209,9 @@ int cliente_modificar(sCliente* pArrayClientes, int limite)
   {
     if(utn_getInt(&bufferId, "Indique Id a modificar: \n", "Error!", 0, 1000, RETRY)==0)
     {
-      if(cliente_buscarId(pArrayClientes, limite, bufferId)!=-1)
+      if(cliente_buscarPorId(pArrayClientes, limite, bufferId)!=-1)
       {
-        indice = cliente_buscarId(pArrayClientes, limite, bufferId);
+        indice = cliente_buscarPorId(pArrayClientes, limite, bufferId);
         bufferEntidad = pArrayClientes[indice];
         if(utn_getNombre(bufferEntidad.nombre, "Indique nombre a modificar: ", "Error! dato invalido.\n", RETRY, SIZE_STRING)==0)
         {
@@ -209,7 +238,7 @@ int cliente_modificar(sCliente* pArrayClientes, int limite)
 
 //----------------------- cliente_baja --------------------------------------------------
 /**
- * \brief Baja
+ * \brief Baja el cliente solicitado por indice
  * \param sCliente* pArrayClientes, Es el puntero al array de clientes
  * \param int limite, es el limite de array
  * \return (-1) Error / (0) Ok
@@ -238,9 +267,10 @@ int cliente_baja(sCliente* pArrayClientes, int limite, int indice)
 int cliente_imprimir(sCliente* pArrayClientes, int limite)
 {
   int retorno = -1;
+  int i;
   if(pArrayClientes != NULL && limite > 0)
   {
-    for(int i=0; i<limite; i++)
+    for(i=0; i<limite; i++)
     {
       if(pArrayClientes[i].isEmpty == FALSE)
       {
@@ -298,7 +328,7 @@ int cliente_imprimirPorId(sCliente* pArrayClientes, int limite, int id)
   int bufferIndice;
   if(pArrayClientes != NULL && limite > 0 && id >= 0)
   {
-    bufferIndice = cliente_buscarId(pArrayClientes, limite, id);
+    bufferIndice = cliente_buscarPorId(pArrayClientes, limite, id);
     if(pArrayClientes[bufferIndice].isEmpty == FALSE)
     {
       printf("\nId: %d - Nombre: %s - Apellido: %s - Cuit: %s\n",
@@ -328,7 +358,7 @@ int cliente_ordenarPorNombre(sCliente* pArrayClientes, int limite, int orden)
   sCliente buffersCliente;
   int auxCmpString;
 
-  if (pArrayClientes != NULL && limite > 0 && (orden == UP || orden == DOWN))
+  if(pArrayClientes != NULL && limite > 0 && (orden == UP || orden == DOWN))
   {
     do
     {
